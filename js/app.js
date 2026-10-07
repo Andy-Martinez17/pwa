@@ -73,8 +73,6 @@ const cardsData = [
 
 const DEFAULT_IMAGE = "./imagenes/placeholder.jpg";
 
-
-
 function createCardTemplate(item) {
   const imageUrl = item.image && item.image.trim() !== "" ? item.image : DEFAULT_IMAGE;
 
@@ -100,8 +98,6 @@ function renderCards(dataList, containerId) {
   container.innerHTML = cardsHTML;
 }
 
-
-
 function getIdFromUrl() {
   const params = new URLSearchParams(window.location.search);
   return Number(params.get('id'));
@@ -114,7 +110,7 @@ function renderDetail(item, containerId) {
   if (!item) {
     container.innerHTML = `
       <p>No se encontró el producto.</p>
-      <a href="/index.html" class="card__button">Volver al catálogo</a>
+      <a href="./index.html" class="card__button">Volver al catálogo</a>
     `;
     return;
   }
@@ -129,13 +125,11 @@ function renderDetail(item, containerId) {
       <div class="card__content">
         <h2 class="card__title">${item.title}</h2>
         <p class="card__description">${item.detail || item.description}</p>
-        <a href="/index.html" class="card__button">Volver al catálogo</a>
+        <a href="./index.html" class="card__button">Volver al catálogo</a>
       </div>
     </article>
   `;
 }
-
-
 
 document.addEventListener('DOMContentLoaded', () => {
   if (document.getElementById('card-container')) {
