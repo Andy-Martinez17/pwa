@@ -1,9 +1,8 @@
-// Cambia este número cada vez que modifiques archivos cacheados
-const VERSION = 'v3';
+const VERSION = 'v4';
 const STATIC_CACHE = `coffee-static-${VERSION}`;
 const RUNTIME_CACHE = `coffee-runtime-${VERSION}`;
 
-// Archivos esenciales (app shell). Si alguno no existe, la instalación falla.
+
 const APP_SHELL = [
   './',
   './index.html',
@@ -13,7 +12,7 @@ const APP_SHELL = [
   './manifest.json'
 ];
 
-// INSTALL: guarda el app shell en caché
+
 self.addEventListener('install', (event) => {
   event.waitUntil(
     caches.open(STATIC_CACHE)
@@ -22,7 +21,7 @@ self.addEventListener('install', (event) => {
   );
 });
 
-// ACTIVATE: borra cachés de versiones anteriores
+
 self.addEventListener('activate', (event) => {
   event.waitUntil(
     caches.keys()
@@ -37,49 +36,60 @@ self.addEventListener('activate', (event) => {
   );
 });
 
-// FETCH: estrategias según el tipo de petición
+
 self.addEventListener('fetch', (event) => {
   const request = event.request;
 
-  // Solo manejamos GET del mismo origen
+
   if (request.method !== 'GET') return;
   const url = new URL(request.url);
   if (url.origin !== self.location.origin) return;
 
-  // Navegación (páginas): red primero, si falla -> caché de esa página o index.html
+  
   if (request.mode === 'navigate') {
     event.respondWith(
-      fetch(request).catch(() => caches.match(request).then((cached) => cached || caches.match('./index.html')))
-    );
-    return;
-  }
-
-
-  if (request.destination === 'image') {
-    event.respondWith(
-      caches.match(request).then((cached) => {
-        if (cached) return cached;
-        return fetch(request).then((response) => {
+      fetch(request)
+        .then((response) => {
+          
           const copy = response.clone();
           caches.open(RUNTIME_CACHE).then((cache) => cache.put(request, copy));
           return response;
-        });
-      })
+        })
+        .catch(async () => {
+          const cached = await caches.match(request);
+          return cached || caches.match('./index.html');
+        })
     );
     return;
   }
 
   
   event.respondWith(
-    caches.match(request).then((cached) => {
-      const network = fetch(request)
+    caches.match(request).then((cachedResponse) => {
+   
+      if (cachedResponse) {
+        return cachedResponse;
+      }
+
+      
+      return fetch(request)
         .then((response) => {
+          
+          if (!response || response.status !== 200 || response.type !== 'basic') {
+            return response;
+          }
+
+          
           const copy = response.clone();
-          caches.open(STATIC_CACHE).then((cache) => cache.put(request, copy));
+          caches.open(RUNTIME_CACHE).then((cache) => {
+            cache.put(request, copy);
+          });
+
           return response;
         })
-        .catch(() => cached);
-      return cached || network;
+        .catch(() => {
+         
+        });
     })
   );
 });
