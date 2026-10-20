@@ -1,31 +1,37 @@
-*{
+* {
     margin:0;
     padding:0;
     box-sizing:border-box;
 }
+
 body{
     background: #fdfdfd;
     font-family: "Nunito", sans-serif;
     font-size: 1rem;
 }
+
 main{
     max-width:  900px;
     margin: auto;
-    padding: 0.5 rem;
+    padding: 0.5rem;
     text-align: center;
 }
+
 nav{
     display: flex;
     justify-content: space-between;
     align-items: center;
 }
+
 ul{
     list-style: none;
     display: flex;
 }
+
 li{
     margin-right: 1rem;
 }
+
 h1{
     color: blue;
     margin-bottom: 0.5rem;
@@ -36,7 +42,6 @@ h1{
   grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
   gap: 1.5rem;
 }
-
 
 .card {
   background-color: #ffffff;
@@ -101,4 +106,99 @@ h1{
 
 .card__button:hover {
   background-color: #0052cc;
+}
+
+/* ==========================================
+   ESTILOS PARA EL BANNER DE INSTALACIÓN PWA
+   ========================================== */
+
+.install-banner.hidden {
+  display: none !important;
+}
+
+.install-banner {
+  position: fixed;
+  bottom: 20px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 90%;
+  max-width: 500px;
+  background: #ffffff;
+  border-radius: 12px;
+  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.25);
+  border: 2px solid #db4938;
+  z-index: 1000;
+  animation: slideUp 0.4s ease-out;
+}
+
+.install-content {
+  padding: 20px;
+  text-align: center;
+}
+
+.install-content h3 {
+  color: #db4938;
+  font-size: 1.25rem;
+  margin-bottom: 8px;
+  font-weight: 700;
+}
+
+.install-content p {
+  color: #333333;
+  font-size: 0.95rem;
+  margin-bottom: 16px;
+  line-height: 1.4;
+}
+
+.install-actions {
+  display: flex;
+  gap: 12px;
+  justify-content: center;
+}
+
+/* Botón principal muy llamativo para la instalación */
+.btn-install-primary {
+  background: linear-gradient(135deg, #db4938, #b53526);
+  color: #ffffff;
+  border: none;
+  padding: 12px 20px;
+  font-size: 1rem;
+  font-weight: bold;
+  border-radius: 8px;
+  cursor: pointer;
+  box-shadow: 0 4px 10px rgba(219, 73, 56, 0.4);
+  transition: transform 0.2s, background 0.2s;
+}
+
+.btn-install-primary:hover {
+  background: linear-gradient(135deg, #c53f30, #a02d20);
+  transform: translateY(-2px);
+}
+
+/* Botón de cancelar / cerrar */
+.btn-install-cancel {
+  background: #f1f1f1;
+  color: #555555;
+  border: none;
+  padding: 12px 16px;
+  font-size: 0.95rem;
+  font-weight: 600;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: background 0.2s;
+}
+
+.btn-install-cancel:hover {
+  background: #e2e2e2;
+}
+
+@keyframes slideUp {
+  from {
+    opacity: 0;
+    transform: translate(-50%, 30px);
+  }
+  to {
+    opacity: 1;
+    transform: translate(-50%, 0);
+  }
 }

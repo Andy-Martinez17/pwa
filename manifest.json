@@ -48,5 +48,20 @@
             "type": "image/png",
             "sizes": "512x512"
         }
+    ],
+    "screenshots": [
+        {
+            "src": "./imagenes/screenmob.png",
+            "sizes": "540x720",
+            "type": "image/png",
+            "label": "Catálogo de Pokémones - Vista Móvil"
+        },
+        {
+            "src": "./imagenes/screendesk.png",
+            "sizes": "1280x800",
+            "type": "image/png",
+            "form_factor": "wide",
+            "label": "Catálogo de Pokémones - Vista Escritorio"
+        }
     ]
 }

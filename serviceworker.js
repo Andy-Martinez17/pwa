@@ -40,17 +40,41 @@ self.addEventListener('activate', (event) => {
 self.addEventListener('fetch', (event) => {
   const request = event.request;
 
-
   if (request.method !== 'GET') return;
   const url = new URL(request.url);
-  if (url.origin !== self.location.origin) return;
+
+
+  if (url.origin === 'https://pokeapi.co') {
+    event.respondWith(
+      caches.open(RUNTIME_CACHE).then(async (cache) => {
+        try {
+          
+          const networkResponse = await fetch(request);
+          if (networkResponse && networkResponse.status === 200) {
+            cache.put(request, networkResponse.clone());
+          }
+          return networkResponse;
+        } catch (error) {
+          
+          const cachedResponse = await cache.match(request);
+          if (cachedResponse) {
+            return cachedResponse;
+          }
+          throw error;
+        }
+      })
+    );
+    return;
+  }
 
   
+  if (url.origin !== self.location.origin) return;
+
+
   if (request.mode === 'navigate') {
     event.respondWith(
       fetch(request)
         .then((response) => {
-          
           const copy = response.clone();
           caches.open(RUNTIME_CACHE).then((cache) => cache.put(request, copy));
           return response;
@@ -63,23 +87,19 @@ self.addEventListener('fetch', (event) => {
     return;
   }
 
-  
+
   event.respondWith(
     caches.match(request).then((cachedResponse) => {
-   
       if (cachedResponse) {
         return cachedResponse;
       }
 
-      
       return fetch(request)
         .then((response) => {
-          
           if (!response || response.status !== 200 || response.type !== 'basic') {
             return response;
           }
 
-          
           const copy = response.clone();
           caches.open(RUNTIME_CACHE).then((cache) => {
             cache.put(request, copy);
